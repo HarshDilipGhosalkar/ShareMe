@@ -12,20 +12,6 @@ import { client } from '../client';
 
 const Login = () => {
     const navigate = useNavigate();
-    const responseGoogle = (response) => {
-        // localStorage.setItem('user', JSON.stringify(response.profileObj));
-        // const { name, googleId, imageUrl } = response.profileObj;
-        // const doc = {
-        //   _id: googleId,
-        //   _type: 'user',
-        //   userName: name,
-        //   image: imageUrl,
-        // };
-        // client.createIfNotExists(doc).then(() => {
-        //   navigate('/', { replace: true });
-        // });
-        console.log(response);
-    };
     const login = useGoogleLogin({
         onSuccess: async respose => {
             try {
@@ -35,24 +21,25 @@ const Login = () => {
                     }
                 })
                 const { name, picture, sub } = res.data;
-                
+
                 const doc = {
-          _id: sub,
-          _type: 'user',
-          userName: name,
-          image: picture,
-        };
-        console.log(doc);
-        client.createIfNotExists(doc).then(() => {
-            navigate('/', { replace: true });
-          });
+                    _id: sub,
+                    _type: 'user',
+                    userName: name,
+                    image: picture,
+                };
+                localStorage.setItem('user', JSON.stringify(doc));
+
+                client.createIfNotExists(doc).then(() => {
+                    navigate('/', { replace: true });
+                });
             } catch (err) {
                 console.log(err)
 
             }
 
         }
-        
+
     });
     return (
         <div className="flex justify-start items-center flex-col h-screen">
@@ -82,15 +69,7 @@ const Login = () => {
                         >
                             <FcGoogle className="mr-4" /> Sign in with google
                         </button>
-                        {/* <GoogleLogin
-                            onSuccess={credentialResponse => {
-                                var decoded = jwt_decode(credentialResponse.credential);
-                                console.log(decoded);
-                            }}
-                            onError={() => {
-                                console.log('Login Failed');
-                            }}
-                        /> */}
+                        
                     </div>
                 </div>
             </div>
